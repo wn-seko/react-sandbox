@@ -98,8 +98,6 @@ module.exports = {
       tags: [
         'assets/normalize.css',
         'assets/semantic.min.css',
-        'assets/react-datepicker.css',
-        'assets/rc-time-picker.css',
       ],
       append: true,
     }),
