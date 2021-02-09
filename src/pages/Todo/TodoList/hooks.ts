@@ -1,12 +1,9 @@
-import React, { FC, useContext } from 'react'
-import { TodoPageContext } from './hooks'
-import TodoForm from './TodoForm'
-
-// organisms
+import { useContext } from 'react'
+import { TodoPageContext } from '../hooks'
 
 // selector の代替のようなもの（例えば todos への format）
 // UI の hooks がここに入るケースがある（例えば useModal など）
-const useTodoList = () => {
+export const useTodoList = () => {
   const { state, dispatch } = useContext(TodoPageContext)
 
   return {
@@ -27,17 +24,3 @@ const useTodoList = () => {
     })
   }
 }
-
-const TodoList: FC<{}> = () => {
-  const { todos } = useTodoList()
-
-  return (
-    <>
-      {todos.map((todo) => (
-        <TodoForm key={todo.id} todo={todo} />
-      ))}
-    </>
-  )
-}
-
-export default TodoList

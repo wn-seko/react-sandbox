@@ -1,9 +1,7 @@
 import React, { FC } from 'react'
-import Button from '../../components/Button'
-import Checkbox from '../../components/Checkbox'
-import Input from '../../components/Input'
-
-// molecules
+import Button from '../../../components/Button'
+import Checkbox from '../../../components/Checkbox'
+import Input from '../../../components/Input'
 
 // handler を受け取ることで任意のページで使用可能な molecules になる
 // dispatch 等を受け取ってはいけない
@@ -20,6 +18,7 @@ interface TodoFormProps {
   todo: TodoItem
 }
 
+// molecules
 const TodoForm: FC<TodoFormProps> = ({ todo }) => {
   const { title, done, onChangeDone, onChangeTitle, onClickDelete } = todo
 
