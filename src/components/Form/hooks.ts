@@ -12,16 +12,16 @@ export const useHelloPageForm = () => {
   const [text, setText] = useState(foo.value)
 
   useEffect(() => {
-      setText(foo.value)
+    setText(foo.value)
   }, [foo.value])
 
   return {
-      text,
-      onTextChange(e: any) {
-        setText(e.target.value)
-      },
-      onSubmit() {
-        console.log(`submit: ${text}`)
-      },
+    text,
+    onTextChange(e: any) {
+      setText(e.target.value)
+    },
+    onSubmit() {
+      console.log(`submit: ${text}`)
+    },
   }
 }
