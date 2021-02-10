@@ -1,4 +1,5 @@
 import { createContext, useReducer, Dispatch } from 'react'
+import { request } from '../../requests'
 
 interface TodoItem {
   id: string
@@ -11,36 +12,64 @@ interface State {
 }
 
 type Actions =
-  { type: 'ADD_TODO'; payload: any } |
-  { type: 'UPDATE_TODO'; payload: any } |
-  { type: 'REMOVE_TODO'; payload: any } |
-  { type: 'REMOVE_DONE_TODO'; payload: any }
-
-const timer = (time: number) => new Promise(resolve => setTimeout(resolve, time))
+  { type: 'SET_TODOS', payload: { todos: TodoItem[] } } |
+  { type: 'ADD_TODO', payload: { todo: TodoItem } } |
+  { type: 'UPDATE_TODO'; payload: { todo: TodoItem } } |
+  { type: 'REMOVE_TODO'; payload: { id: string } } |
+  { type: 'REMOVE_DONE_TODO'; payload: { ids: string[] } }
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
+    case 'SET_TODOS':
+      return { todos: action.payload.todos }
     case 'ADD_TODO':
-      // setTodos(todos.concat({ id: uuid(), title: '', done: false }))
-      return state
+      return { todos: state.todos.concat(action.payload.todo) }
     case 'UPDATE_TODO':
-      // setTodos(todos.map(previous => previous.id === todo.id ? todo : previous))
-      return state
+      return { todos: state.todos.map(todo => todo.id === action.payload.todo.id ? action.payload.todo : todo) }
     case 'REMOVE_TODO':
-      // setTodos(todos.filter(todo => todo.id !== id))
-      return state
+      return { todos: state.todos.filter(todo => todo.id !== action.payload.id) }
     case 'REMOVE_DONE_TODO':
-      // setTodos(todos.filter(todo => !todo.done))
-      return state
+      return { todos: state.todos.filter(todo => !action.payload.ids.includes(todo.id)) }
     default:
       const typecheck: never = action
       return typecheck
   }
 }
 
-export const addTodoAsync = (payload: any) => async (dispatch: Dispatch<Actions>) => {
-  await timer(10)
-  dispatch({ 'type': 'ADD_TODO', payload })
+export const fetchTodoAsync = () => async (dispatch: Dispatch<Actions>) => {
+  try {
+    const response = await request.get('/todos')
+    dispatch({ 'type': 'SET_TODOS', payload: { todos: response.data } })
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+export const addTodoAsync = () => async (dispatch: Dispatch<Actions>) => {
+  try {
+    const response = await request.post('/todos')
+    dispatch({ 'type': 'ADD_TODO', payload: { todo: response.data } })
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export const updateTodoAsync = (payload: { todo: TodoItem }) => async (dispatch: Dispatch<Actions>) => {
+  try {
+    const response = await request.put(`/todos/${payload.todo.id}`, { todo: payload.todo })
+    dispatch({ 'type': 'UPDATE_TODO', payload: { todo: response.data } })
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export const deleteTodoAsync = (payload: { id: string }) => async (dispatch: Dispatch<Actions>) => {
+  try {
+    await request.delete(`/todos/${payload.id}`)
+    dispatch({ 'type': 'REMOVE_TODO', payload: { id: payload.id } })
+  } catch(e) {
+    console.error(e)
+  }
 }
 
 const initialState: State = {
@@ -68,21 +97,3 @@ export const TodoPageContext = createContext<{
   state: initialState,
   dispatch: () => {}
 })
-
-// const getStorageItem = (key: string) => {
-//   window.localStorage.getItem(key)
-// }
-
-// const setStorageItem = (key: string, value: string) => {
-//   window.localStorage.setItem(key, value)
-// }
-
-// const removeStorageItem = (key: string) => {
-//   window.localStorage.removeItem(key)
-// }
-
-// export const TodoPageContext = createContext({
-//   getStorageItem,
-//   setStorageItem,
-//   removeStorageItem
-// })

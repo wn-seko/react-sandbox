@@ -2,14 +2,15 @@ import { useContext } from 'react'
 import { addTodoAsync, TodoPageContext } from '../hooks'
 
 export const useButtons = () => {
-    const { dispatch } = useContext(TodoPageContext)
+    const { state, dispatch } = useContext(TodoPageContext)
   
     const onClickAdd = () => {
-      dispatch(addTodoAsync({}))
+      dispatch(addTodoAsync())
     }
   
     const onClickRemoveDone = () => {
-      dispatch({ type: 'REMOVE_DONE_TODO', payload: {} })
+      const doneTodoIds = state.todos.filter(todo => todo.done).map(todo => todo.id)
+      dispatch({ type: 'REMOVE_DONE_TODO', payload: { ids: doneTodoIds } })
     }
   
     return { onClickAdd, onClickRemoveDone }

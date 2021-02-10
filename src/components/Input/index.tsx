@@ -6,7 +6,7 @@ interface InputProps {
 }
 
 const Input: FC<InputProps> = ({ onChange, value }) => {
-  return <input type="text" onChange={onChange} value={value} />
+  return <input type="text" onChange={onChange} defaultValue={value} />
 }
 
 export default Input
