@@ -11,9 +11,6 @@ const Buttons: FC<{}> = () => {
       <Button onClick={onClickAdd}>
         追加
       </Button>
-      <Button onClick={onClickAdd}>
-        フィルタ
-      </Button>
       <Button onClick={onClickRemoveDone}>
         一括削除
       </Button>
